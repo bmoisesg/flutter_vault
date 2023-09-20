@@ -21,8 +21,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   void initState() {
     super.initState();
     setState(() {
-      ctrlUserName.text = "bmoisesg@gmail.com";
-      ctrlPass.text = "admin123";
+      /* ctrlUserName.text = "bmoisesg@gmail.com";
+      ctrlPass.text = "admin123"; */
     });
   }
 

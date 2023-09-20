@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
 import 'package:flutter_gestor_contras/logic/vault.dart';
@@ -21,9 +22,22 @@ class _AddPassPageState extends State<AddPassPage> {
   @override
   void initState() {
     super.initState();
-    ctrlSiteAddress.text = "http://facebook.com";
-    ctrlPass.text = "123";
-    ctrlUserName.text = "mi contraseña";
+  }
+
+  Future<List<String>> getData() async {
+    List<String> listCategory = [];
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    DataSnapshot snapshot = await ref.child('categorias/').get();
+    if (snapshot.exists) {
+      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
+        Map<dynamic, dynamic> dataMap = snapshot.value as Map;
+        dataMap.forEach((key, value) {
+          listCategory.add(value['nameCategory']);
+        });
+        return listCategory;
+      }
+    }
+    return [];
   }
 
   @override
@@ -42,15 +56,29 @@ class _AddPassPageState extends State<AddPassPage> {
         child: Center(
           child: FractionallySizedBox(
             widthFactor: 0.95,
-            child: ListView(children: [_buildBody()]),
+            child: ListView(children: [
+              FutureBuilder(
+                future: getData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    return _buildBody(snapshot.data!);
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ]),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(List<String> list) {
     var separador = const SizedBox(height: 10);
+    String selectedOption = list.first;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -69,6 +97,39 @@ class _AddPassPageState extends State<AddPassPage> {
                 'Credential',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
+              separador,
+              const Text(
+                'Category',
+                style: TextStyle(color: Color(0xff757784)),
+              ),
+              separador,
+              StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                return Container(
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xff6b5e5d)),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: DropdownButton<String>(
+                    isDense: true,
+                    isExpanded: true,
+                    underline: Container(),
+                    value: selectedOption,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedOption = value!;
+                      });
+                    },
+                    items: list.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                );
+              }),
               separador,
               const Text(
                 'Site Address',
@@ -128,14 +189,14 @@ class _AddPassPageState extends State<AddPassPage> {
         const SizedBox(height: 20),
         CustomBtn(
           myTitle: 'Create the voult',
-          myFuntion: fntCreateVault,
+          myFuntion: () => fntCreateVault(selectedOption),
         ),
         const SizedBox(height: 20),
       ],
     );
   }
 
-  fntCreateVault() {
+  fntCreateVault(String myCategory) {
     if (ctrlPass.text == "" ||
         ctrlSiteAddress.text == "" ||
         ctrlUserName.text == "") {
@@ -145,12 +206,15 @@ class _AddPassPageState extends State<AddPassPage> {
     }
     var bloc = MyInheriteWidget.of(context)!.loginBloc;
     bloc.onEventAdd(Vault(
-      contra: ctrlPass.text,
-      dominio: ctrlSiteAddress.text,
-      nombre: ctrlUserName.text,
-    ));
-    /*  ctrlPass.text = "";
+        contra: ctrlPass.text,
+        dominio: ctrlSiteAddress.text,
+        nombre: ctrlUserName.text,
+        category: myCategory));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Saved!')));
+    //Navigator.pop(context);
+    ctrlPass.text = "";
     ctrlSiteAddress.text = "";
-    ctrlUserName.text = ""; */
+    ctrlUserName.text = "";
   }
 }

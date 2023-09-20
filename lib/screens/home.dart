@@ -4,7 +4,7 @@ import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
 import 'package:flutter_gestor_contras/color.dart';
 import 'package:flutter_gestor_contras/logic/vault.dart';
 import 'package:flutter_gestor_contras/screens/menu.dart';
-import 'package:flutter_gestor_contras/screens/vault_add.dart';
+import 'package:flutter_gestor_contras/screens/create_vault.dart';
 import 'package:flutter_gestor_contras/widgets/custom_btn.dart';
 
 class HomePage extends StatefulWidget {
@@ -98,12 +98,25 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
+                            Row(
+                              children: [
+                                const Icon(Icons.category),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    bloc.listVaults[index].category,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 20),
                             CustomBtn(
-                                myTitle: 'Delete',
-                                myFuntion: () {
-                                  bloc.onEventDelete(index);
-                                })
+                              myTitle: 'Delete',
+                              myFuntion: () {
+                                bloc.onEventDelete(index);
+                              },
+                            )
                           ],
                         ),
                       ),

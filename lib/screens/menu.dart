@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
+import 'package:flutter_gestor_contras/screens/create_categories.dart';
 import 'package:flutter_gestor_contras/screens/login.dart';
 import 'package:flutter_gestor_contras/utils/autentication.dart';
 
@@ -17,9 +18,19 @@ class _MenuPageState extends State<MenuPage> {
       padding: EdgeInsets.all(38),
       children: [
         const FittedBox(
-          child: Text('Nombre del usuario'),
+          child: Text('Name of the user'),
         ),
         const Divider(),
+        ListTile(
+          title: const Text('Categories'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CategoryPage()),
+            );
+          },
+        ),
+        const SizedBox(height: 10),
         ListTile(
           trailing: const Icon(Icons.exit_to_app),
           title: const Text('Log out'),
@@ -32,7 +43,7 @@ class _MenuPageState extends State<MenuPage> {
               MaterialPageRoute(builder: (context) => const LoginPage()),
             );
           },
-        )
+        ),
       ],
     );
   }

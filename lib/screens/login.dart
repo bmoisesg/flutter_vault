@@ -23,8 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    ctrlUserName.text = "bmoisesg@gmail.com";
-    ctrlPass.text = "admin123";
+    /*  ctrlUserName.text = "bmoisesg@gmail.com";
+    ctrlPass.text = "admin123"; */
   }
 
   @override
@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         backgroundColor: MyColor.grey,
         title: const Text(
-          'Vaults - melmv',
+          'Vaults - MELMV',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

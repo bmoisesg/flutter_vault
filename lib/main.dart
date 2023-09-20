@@ -4,6 +4,7 @@ import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
 import 'package:flutter_gestor_contras/screens/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     var bloc = vaultBloc();
     return MyInheriteWidget(
       loginBloc: bloc,
