@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "184169640410",
+    "firebase_url": "https://vaultmelmv-default-rtdb.firebaseio.com",
+    "project_id": "vaultmelmv",
+    "storage_bucket": "vaultmelmv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184169640410:android:ed31649d6bd645b3e250e3",
+        "android_client_info": {
+          "package_name": "com.example.flutter_gestor_contras"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw-MpOsQS9JHg18V-PvrZ_qBoh02BkmEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
