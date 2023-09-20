@@ -15,7 +15,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(38),
+      padding: const EdgeInsets.all(38),
       children: [
         const FittedBox(
           child: Text('Name of the user'),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gestor_contras/bloc/bloc.dart';
 import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
 import 'package:flutter_gestor_contras/color.dart';
-import 'package:flutter_gestor_contras/logic/vault.dart';
 import 'package:flutter_gestor_contras/screens/menu.dart';
 import 'package:flutter_gestor_contras/screens/create_vault.dart';
 import 'package:flutter_gestor_contras/widgets/custom_btn.dart';

@@ -5,8 +5,6 @@ class Vault {
   late String category;
   late bool fav;
 
-  //late categorias categoria;
-
   Vault(
       {required this.nombre,
       required this.dominio,
@@ -14,5 +12,3 @@ class Vault {
       required this.category,
       this.fav = false});
 }
-
-enum categorias { categoria1, categoria2, categoria3 }

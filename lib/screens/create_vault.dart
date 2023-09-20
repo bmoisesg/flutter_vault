@@ -201,7 +201,7 @@ class _AddPassPageState extends State<AddPassPage> {
         ctrlSiteAddress.text == "" ||
         ctrlUserName.text == "") {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Ingress all fields')));
+          .showSnackBar(const SnackBar(content: Text('Ingress all fields')));
       return;
     }
     var bloc = MyInheriteWidget.of(context)!.loginBloc;
@@ -211,7 +211,7 @@ class _AddPassPageState extends State<AddPassPage> {
         nombre: ctrlUserName.text,
         category: myCategory));
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Saved!')));
+        .showSnackBar(const SnackBar(content: Text('Saved!')));
     //Navigator.pop(context);
     ctrlPass.text = "";
     ctrlSiteAddress.text = "";
