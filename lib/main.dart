@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gestor_contras/bloc/bloc.dart';
+import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
 import 'package:flutter_gestor_contras/screens/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,17 +17,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffFF7678)),
-        useMaterial3: true,
-        textTheme: GoogleFonts.dmSansTextTheme(
-          Theme.of(context).textTheme,
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    var bloc = vaultBloc();
+    return MyInheriteWidget(
+      loginBloc: bloc,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffFF7678)),
+          useMaterial3: true,
+          textTheme: GoogleFonts.dmSansTextTheme(
+            Theme.of(context).textTheme,
+          ),
         ),
+        home: const LoginPage(),
       ),
-      home: const Login(),
     );
   }
 }

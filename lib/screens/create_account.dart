@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gestor_contras/color.dart';
 import 'package:flutter_gestor_contras/utils/autentication.dart';
 import 'package:flutter_gestor_contras/widgets/custom_btn.dart';
+import 'package:flutter_gestor_contras/widgets/custom_input.dart';
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
@@ -14,14 +16,13 @@ class CreateAccountPage extends StatefulWidget {
 class _CreateAccountPageState extends State<CreateAccountPage> {
   TextEditingController ctrlUserName = TextEditingController();
   TextEditingController ctrlPass = TextEditingController();
-  final Authentication _authentication = Authentication();
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      ctrlUserName.text = "bmoisesg@gmail.com";
-      ctrlPass.text = "admin123";
+      /* ctrlUserName.text = "bmoisesg@gmail.com";
+      ctrlPass.text = "admin123"; */
     });
   }
 
@@ -30,14 +31,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xfff0ecf2),
+        backgroundColor: MyColor.grey,
         title: const Text(
           'Create Account',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
-        color: const Color(0xfff0edf2),
+        color: MyColor.grey,
         child: Center(
           child: FractionallySizedBox(
             widthFactor: 0.95,
@@ -69,17 +70,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: ctrlUserName,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlUserName,
+                myIcon: const Icon(Icons.person_outline),
+                typeInput: TextInputType.emailAddress,
               ),
               separador,
               const Text(
@@ -87,18 +81,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlPass,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.lock_open),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlPass,
+                myIcon: const Icon(Icons.lock_open),
+                hidePass: true,
               ),
               const SizedBox(height: 20),
               CustomBtn(
@@ -115,13 +101,18 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   fntCreateAccount() async {
-    if (ctrlPass.text == "" && ctrlUserName.text == "") {
+    if (ctrlPass.text == "" || ctrlUserName.text == "") {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('null values are not valid')));
+          const SnackBar(content: Text('Not is valid value empy')));
       return;
     }
-    await _authentication.signUp(
-        ctrlUserName.text.trim(), ctrlPass.text.trim(), context);
+
+    await Authentication().signUp(
+      ctrlUserName.text.trim(),
+      ctrlPass.text.trim(),
+      context,
+    );
+
     ctrlPass.text = "";
   }
 }

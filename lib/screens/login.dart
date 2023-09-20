@@ -1,38 +1,45 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gestor_contras/color.dart';
 import 'package:flutter_gestor_contras/screens/create_account.dart';
+import 'package:flutter_gestor_contras/screens/home.dart';
 import 'package:flutter_gestor_contras/widgets/custom_btn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_gestor_contras/utils/autentication.dart';
+import 'package:flutter_gestor_contras/widgets/custom_input.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginPageState extends State<LoginPage> {
   TextEditingController ctrlUserName = TextEditingController();
   TextEditingController ctrlPass = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    /*  ctrlUserName.text = "bmoisesg@gmail.com";
+    ctrlPass.text = "admin123"; */
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xfff0ecf2),
+        backgroundColor: MyColor.grey,
         title: const Text(
-          'Vaults - melmv',
+          'Vaults - MELMV',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
-        color: const Color(0xfff0edf2),
+        color: MyColor.grey,
         child: Center(
           child: FractionallySizedBox(
             widthFactor: 0.95,
@@ -70,43 +77,28 @@ class _LoginState extends State<Login> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlUserName,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
-              ),
+              CustomInput(
+                  myCtl: ctrlUserName,
+                  myIcon: const Icon(Icons.person_outline),
+                  typeInput: TextInputType.emailAddress),
               separador,
               const Text(
-                'password',
+                'Password',
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlPass,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.lock_open),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlPass,
+                myIcon: const Icon(Icons.lock_open),
+                hidePass: true,
               ),
               const SizedBox(height: 20),
-              CustomBtn(myTitle: 'Login', myFuntion: fntLogin),
+              CustomBtn(myTitle: 'LoginPage', myFuntion: fntLoginPage),
               const SizedBox(height: 20),
               TextButton(
-                  onPressed: fntCreateAccount,
-                  child: const Text('You do not have an account?')),
+                onPressed: fntCreateAccount,
+                child: const Text('You do not have an account?'),
+              ),
             ],
           ),
         ),
@@ -122,11 +114,14 @@ class _LoginState extends State<Login> {
             children: [
               separador,
               const Text(
-                'With Google',
+                'With Gmail',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               separador,
-              CustomBtn(myTitle: 'Go', myFuntion: fntLoginGmail),
+              CustomBtn(
+                myTitle: 'Select account',
+                myFuntion: fntLoginPageGmail,
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -136,10 +131,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  fntLogin() {
-    Authentication().signIn(ctrlUserName.text, ctrlPass.text);
-  }
-
   fntCreateAccount() {
     Navigator.push(
       context,
@@ -147,5 +138,51 @@ class _LoginState extends State<Login> {
     );
   }
 
-  fntLoginGmail() async {}
+  fntLoginPage() async {
+    if (ctrlPass.text == "" || ctrlUserName.text == "") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Not is valid value empy')),
+      );
+      return;
+    }
+
+    User? user = await Authentication()
+        .signIn(ctrlUserName.text, ctrlPass.text, context);
+
+    if (user == null) {
+      Authentication().signOut();
+      return;
+    }
+    print(user);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
+  fntLoginPageGmail() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 20),
+              Text('Loading...'),
+            ],
+          ),
+        );
+      },
+    );
+    User? user = await Authentication().gmailSignIn(context: context);
+    print(user);
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
 }
