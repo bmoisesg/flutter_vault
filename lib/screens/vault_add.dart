@@ -1,16 +1,31 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gestor_contras/bloc/inheritedwidget.dart';
+import 'package:flutter_gestor_contras/logic/vault.dart';
 import 'package:flutter_gestor_contras/widgets/custom_btn.dart';
+import 'package:flutter_gestor_contras/widgets/custom_input.dart';
 
-class AddPass extends StatefulWidget {
-  const AddPass({super.key});
+class AddPassPage extends StatefulWidget {
+  const AddPassPage({super.key});
 
   @override
-  State<AddPass> createState() => _AddPassState();
+  State<AddPassPage> createState() => _AddPassPageState();
 }
 
-class _AddPassState extends State<AddPass> {
+class _AddPassPageState extends State<AddPassPage> {
+  TextEditingController ctrlSiteAddress = TextEditingController();
+  TextEditingController ctrlUserName = TextEditingController();
+  TextEditingController ctrlPass = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ctrlSiteAddress.text = "http://facebook.com";
+    ctrlPass.text = "123";
+    ctrlUserName.text = "mi contraseña";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +50,6 @@ class _AddPassState extends State<AddPass> {
   }
 
   Widget _buildBody() {
-    TextEditingController ctrlSiteAddress = TextEditingController();
-    TextEditingController ctrlUserName = TextEditingController();
-    TextEditingController ctrlPass = TextEditingController();
     var separador = const SizedBox(height: 10);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,17 +75,9 @@ class _AddPassState extends State<AddPass> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlSiteAddress,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.language),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlSiteAddress,
+                myIcon: const Icon(Icons.language),
               ),
               separador,
               const Text(
@@ -81,17 +85,9 @@ class _AddPassState extends State<AddPass> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlUserName,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlUserName,
+                myIcon: const Icon(Icons.person_outline),
               ),
               separador,
               const Text(
@@ -99,18 +95,10 @@ class _AddPassState extends State<AddPass> {
                 style: TextStyle(color: Color(0xff757784)),
               ),
               separador,
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrlPass,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.lock_open),
-                  border: OutlineInputBorder(),
-                  labelText: "",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
+              CustomInput(
+                myCtl: ctrlPass,
+                myIcon: const Icon(Icons.lock_open),
+                hidePass: true,
               ),
               separador,
             ],
@@ -138,13 +126,31 @@ class _AddPassState extends State<AddPass> {
           ),
         ),
         const SizedBox(height: 20),
-        CustomBtn(myTitle: 'Create the voult', myFuntion: fntCreate),
+        CustomBtn(
+          myTitle: 'Create the voult',
+          myFuntion: fntCreateVault,
+        ),
         const SizedBox(height: 20),
       ],
     );
   }
 
-  fntCreate() {
-    print('Creando la encuesta...');
+  fntCreateVault() {
+    if (ctrlPass.text == "" ||
+        ctrlSiteAddress.text == "" ||
+        ctrlUserName.text == "") {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ingress all fields')));
+      return;
+    }
+    var bloc = MyInheriteWidget.of(context)!.loginBloc;
+    bloc.onEventAdd(Vault(
+      contra: ctrlPass.text,
+      dominio: ctrlSiteAddress.text,
+      nombre: ctrlUserName.text,
+    ));
+    /*  ctrlPass.text = "";
+    ctrlSiteAddress.text = "";
+    ctrlUserName.text = ""; */
   }
 }
