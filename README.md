@@ -15,7 +15,7 @@ Es una aplicacion movil para gestor de contraseñas:
 
 <p align="center">
   <img src="./images/login.png" alt="Descripción de la imagen" width="200">
-  <img src="./images/Home.png" alt="Descripción de la imagen" width="200">
+  <img src="./images/home.png" alt="Descripción de la imagen" width="200">
   <img src="./images/crearcontra.png" alt="Descripción de la imagen" width="200">
 
 ### Crear cuenta y login con gmail
